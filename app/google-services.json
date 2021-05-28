@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "970992803827",
+    "project_id": "cbsd-project-f2836",
+    "storage_bucket": "cbsd-project-f2836.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:970992803827:android:0ab7a39c466696e372fc86",
+        "android_client_info": {
+          "package_name": "com.example.cbsd_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "970992803827-oj0rvagvkql55fabkpk1idg1hlrmesbm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-gLA7iTSsfVc3W5Mw_us42Q4NHYXIYK8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "970992803827-oj0rvagvkql55fabkpk1idg1hlrmesbm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

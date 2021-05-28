@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ViewRoomActivity">
+
+    <item
+        android:id="@+id/menu_message_itemPinMessage"
+        android:title="@string/menu_message_pin" />
+
+    <item
+        android:id="@+id/menu_message_itemEditMessage"
+        android:title="@string/menu_message_edit" />
+
+    <item
+        android:id="@+id/menu_message_itemDeleteMessage"
+        android:title="@string/menu_message_delete" />
+</menu>
