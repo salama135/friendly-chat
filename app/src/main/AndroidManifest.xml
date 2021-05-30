@@ -6,8 +6,10 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- Used only for testing purposes, not required for Firebase Storage -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -16,10 +18,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".SearchChatActivity"></activity>
         <activity android:name=".ShowPinnedMessagesActivity" />
         <activity android:name=".ChangeThemeActivity" />
         <activity android:name=".ViewRoomActivity" />
-        <activity android:name=".EditRoomActivity" />
         <activity android:name=".ViewRoomsActivity" />
         <activity android:name=".CreateRoomActivity" />
         <activity android:name=".ViewUserActivity" />

@@ -10,18 +10,23 @@
         android:id="@+id/item_room_textViewRoomName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:textAlignment="center"
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/item_room_textViewIsPrivate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:textAlignment="center"
+        android:textSize="30sp" />
 
     <Button
-        android:id="@+id/item_room_buttonEditRoom"
+        android:id="@+id/item_room_buttonViewRoom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/edit_room_button" />
+        android:text="@string/view_chat" />
+
 </LinearLayout>

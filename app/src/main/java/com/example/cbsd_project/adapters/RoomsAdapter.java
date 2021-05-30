@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cbsd_project.ViewRoomActivity;
+import com.example.cbsd_project.ViewRoomsActivity;
 import com.example.cbsd_project.helpers.Constants;
 import com.example.cbsd_project.CreateRoomActivity;
 import com.example.cbsd_project.R;
@@ -28,7 +30,7 @@ public class RoomsAdapter extends
         // for any view that will be set as you render a row
         public TextView textViewRoomName;
         public TextView textViewIsPrivate;
-        public Button buttonEditRoom;
+        public Button buttonViewRoom;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -39,7 +41,7 @@ public class RoomsAdapter extends
 
             textViewRoomName = (TextView) itemView.findViewById(R.id.item_room_textViewRoomName);
             textViewIsPrivate = (TextView) itemView.findViewById(R.id.item_room_textViewIsPrivate);
-            buttonEditRoom = (Button) itemView.findViewById(R.id.item_room_buttonEditRoom);
+            buttonViewRoom = (Button) itemView.findViewById(R.id.item_room_buttonViewRoom);
         }
     }
 
@@ -71,14 +73,14 @@ public class RoomsAdapter extends
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Get the data model based on position
-        Room contact = mRooms.get(position);
+        Room room = mRooms.get(position);
 
         // Set item views based on your views and data model
         TextView textViewRoomName = holder.textViewRoomName;
-        textViewRoomName.setText(contact.getName());
+        textViewRoomName.setText(room.getName());
         TextView textViewRoomType = holder.textViewIsPrivate;
 
-        switch (contact.getRoomType()){
+        switch (room.getRoomType()){
             case Constants.RoomTypePrivate:
                 textViewRoomType.setText(R.string.room_type_private);
                 break;
@@ -86,12 +88,15 @@ public class RoomsAdapter extends
                 textViewRoomType.setText(R.string.room_type_public);
                 break;
             default:
-                throw new IllegalStateException("Unexpected value: " + contact.getRoomType());
+                throw new IllegalStateException("Unexpected value: " + room.getRoomType());
         }
 
-        Button buttonEditRoom = holder.buttonEditRoom;
-        buttonEditRoom.setOnClickListener(v -> {
-            Intent intent = new Intent(context, CreateRoomActivity.class);
+        Button buttonViewRoom = holder.buttonViewRoom;
+        buttonViewRoom.setOnClickListener(v -> {
+
+            Room.setCurrentRoom(room);
+
+            Intent intent = new Intent(context, ViewRoomActivity.class);
             context.startActivity(intent);
         });
     }

@@ -30,12 +30,29 @@
         ads:layout_constraintStart_toStartOf="parent">
 
         <ImageView
-            android:id="@+id/activity_view_room_imageViewAddFile"
+            android:id="@+id/activity_view_room_imageViewShareFile"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:background="#00FFFFFF"
-            ads:srcCompat="@drawable/outline_add_photo_alternate_24" />
+            android:contentDescription="TODO"
+            ads:srcCompat="@android:drawable/ic_menu_upload" />
+
+        <ImageView
+            android:id="@+id/activity_view_room_imageViewShareLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="#00FFFFFF"
+            ads:srcCompat="@android:drawable/ic_menu_mylocation" />
+
+        <ImageView
+            android:id="@+id/activity_view_room_imageViewSharePhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="#00FFFFFF"
+            ads:srcCompat="@android:drawable/ic_menu_gallery" />
 
         <!--    <EditText-->
         <!--        android:id="@+id/activity_view_room_editTextMessage"-->
@@ -75,7 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/edit_room" />
+            android:text="@string/change_theme" />
 
         <Button
             android:id="@+id/activity_view_room_buttonViewPinnedMessages"
@@ -83,6 +100,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/view_pinned_messages" />
+
+        <Button
+            android:id="@+id/activity_view_room_buttonSearchChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/search_chat" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 

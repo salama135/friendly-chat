@@ -6,11 +6,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.cbsd_project.adapters.RoomsAdapter;
+import com.example.cbsd_project.helpers.Constants;
+import com.example.cbsd_project.helpers.ThemeUtil;
 import com.example.cbsd_project.models.Room;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,6 +39,9 @@ public class ViewRoomsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ThemeUtil.setTheme(this);
+
         setContentView(R.layout.activity_view_rooms);
 
         mDatabase = FirebaseDatabase.getInstance().getReference(Room.firebasePath);
@@ -46,12 +55,19 @@ public class ViewRoomsActivity extends AppCompatActivity {
                 Log.e("Count " ,""+snapshot.getChildrenCount());
                 rooms.clear();
                 for (DataSnapshot roomSnapshot: snapshot.getChildren()) {
-                    Log.e("Get Data", roomSnapshot.getKey());
+                    String roomID = roomSnapshot.getKey();
+                    Log.e("Get Data", roomID);
 
                     Room room = roomSnapshot.getValue(Room.class);
+
+//                    assert room != null;
+//                    if(room.getRoomType().equals(Constants.RoomTypePrivate)) continue;
+
                     rooms.add(room);
+                    room.setRoomID(roomID);
                     Log.e("Get Data", room.getName());
                     Log.e("Get Data", String.valueOf(room.getRoomType()));
+
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -69,6 +85,13 @@ public class ViewRoomsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        Button buttonViewUser = (Button) findViewById(R.id.activity_view_rooms_buttonViewUser);
+
+        buttonViewUser.setOnClickListener(v -> {
+            Intent intent = new Intent(ViewRoomsActivity.this, ViewUserActivity.class);
+            startActivity(intent);
+        });
+
         listViewRooms = (RecyclerView) findViewById(R.id.activity_view_rooms_listViewRooms);
 
         adapter = new RoomsAdapter(rooms);
@@ -77,4 +100,14 @@ public class ViewRoomsActivity extends AppCompatActivity {
         // Set layout manager to position the items
         listViewRooms.setLayoutManager(new LinearLayoutManager(this));
     }
+
+    @Override
+    protected void onRestart() {
+        ThemeUtil.setTheme(this);
+        super.onRestart();
+        startActivity(getIntent());
+        finish();
+        overridePendingTransition(0, 0);
+    }
+
 }

@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        app:cardBackgroundColor="#FFFFFF"
         app:cardCornerRadius="20dp"
         app:cardElevation="10dp"
         app:cardMaxElevation="12dp"
@@ -24,40 +25,36 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/item_message_receiver_textViewMessage"
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/item_message_sender_mapView"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="230dp"
                 android:layout_margin="10dp"
-                android:background="@android:color/transparent"
-                android:maxWidth="250dp"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/black"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/item_message_webview_receiver_imageViewUserAvatar"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="This is a message" />
+                app:layout_constraintEnd_toStartOf="@+id/item_message_sender_imageViewUserAvatar"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/item_message_webview_receiver_textViewSender"
+                android:id="@+id/item_message_sender_textViewSender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="10dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                app:layout_constraintStart_toStartOf="@id/item_message_receiver_textViewMessage"
-                app:layout_constraintTop_toBottomOf="@id/item_message_receiver_textViewMessage"
+                app:layout_constraintEnd_toEndOf="@+id/item_message_sender_mapView"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/item_message_sender_mapView"
+                app:layout_constraintTop_toBottomOf="@+id/item_message_sender_mapView"
                 tools:text="FirstName LastName" />
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/item_message_webview_receiver_imageViewUserAvatar"
+                android:id="@+id/item_message_sender_imageViewUserAvatar"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_margin="10dp"
                 android:src="@drawable/ic_account_circle_black_36dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

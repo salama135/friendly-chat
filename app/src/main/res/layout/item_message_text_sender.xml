@@ -27,7 +27,7 @@
 
             <TextView
                 android:id="@+id/item_message_sender_textViewMessage"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:background="@android:color/transparent"
@@ -36,6 +36,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/black"
                 app:layout_constraintEnd_toStartOf="@+id/item_message_sender_imageViewUserAvatar"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="This is a message" />

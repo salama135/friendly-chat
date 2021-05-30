@@ -59,8 +59,7 @@ public class MainActivity extends AppCompatActivity {
             User.setCurrentUser(currentUser);
 
             // go to home
-//            Intent intent = new Intent(MainActivity.this, ViewUserActivity.class);
-            Intent intent = new Intent(MainActivity.this, ViewRoomActivity.class);
+            Intent intent = new Intent(MainActivity.this, ViewRoomsActivity.class);
             startActivity(intent);
 
         }  // No user is signed in
@@ -68,23 +67,3 @@ public class MainActivity extends AppCompatActivity {
         // [END check_current_user]
     }
 }
-
-// show/edit user
-
-//TODO
-// search users
-
-// show/edit rooms
-
-// show/edit room
-
-//TODO
-// show participants
-
-//TODO
-// edit participants
-
-// show/edit messages
-
-//TODO
-// show/edit pinned-messages

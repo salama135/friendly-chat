@@ -45,6 +45,8 @@ public class MessagesAdapter extends
             textViewMessage = (TextView) itemView.findViewById(R.id.item_message_receiver_textViewMessage);
             textViewSender = (TextView) itemView.findViewById(R.id.item_message_webview_receiver_textViewSender);
             imageViewUserAvatar = (ImageView) itemView.findViewById(R.id.item_message_webview_receiver_imageViewUserAvatar);
+
+            itemView.setOnCreateContextMenuListener(this); //REGISTER ON CREATE MENU LISTENER
         }
 
         @Override
@@ -105,6 +107,8 @@ public class MessagesAdapter extends
             webViewMessage = (WebView) itemView.findViewById(R.id.item_message_webview_receiver_webViewMessage);
             textViewSender = (TextView) itemView.findViewById(R.id.item_message_webview_receiver_textViewSender);
             imageViewUserAvatar = (ImageView) itemView.findViewById(R.id.item_message_webview_receiver_imageViewUserAvatar);
+
+            itemView.setOnCreateContextMenuListener(this); //REGISTER ON CREATE MENU LISTENER
         }
 
         @Override
@@ -134,6 +138,8 @@ public class MessagesAdapter extends
             webViewMessage = (WebView) itemView.findViewById(R.id.item_message_webview_sender_webViewMessage);
             textViewSender = (TextView) itemView.findViewById(R.id.item_message_webview_sender_textViewSender);
             imageViewUserAvatar = (ImageView) itemView.findViewById(R.id.item_message_webview_sender_imageViewUserAvatar);
+
+            itemView.setOnCreateContextMenuListener(this); //REGISTER ON CREATE MENU LISTENER
         }
 
         @Override

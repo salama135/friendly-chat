@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.example.cbsd_project.helpers.ThemeUtil;
+import com.google.android.gms.maps.MapView;
 
 
 public class ChangeThemeActivity extends AppCompatActivity {
@@ -63,5 +64,6 @@ public class ChangeThemeActivity extends AppCompatActivity {
             finish();
             overridePendingTransition(0, 0);
         });
+
     }
 }

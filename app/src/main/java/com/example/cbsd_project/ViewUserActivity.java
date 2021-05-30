@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cbsd_project.models.User;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -76,7 +77,6 @@ public class ViewUserActivity extends AppCompatActivity {
 
         imageViewUserPhoto = (ImageView) findViewById(R.id.activity_view_user_imageViewUserPhoto);
 
-
         buttonUpdateUserAvatar.setOnClickListener(v -> {
             Intent intent = new Intent();
             intent.setType("image/*");
@@ -85,14 +85,12 @@ public class ViewUserActivity extends AppCompatActivity {
         });
 
         buttonUpdateInfo.setOnClickListener(v -> {
-
             String name = editTextName.getText().toString();
             updateProfile(name, "");
         });
 
         buttonSignOut.setOnClickListener(v -> {
             signOut();
-
             // go to main
             Intent intent = new Intent(ViewUserActivity.this, MainActivity.class);
             startActivity(intent);
@@ -101,7 +99,6 @@ public class ViewUserActivity extends AppCompatActivity {
         buttonUploadPhoto.setOnClickListener(v -> {
             uploadImage();
         });
-
     }
 
     private void uploadImage() {
@@ -112,11 +109,11 @@ public class ViewUserActivity extends AppCompatActivity {
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
 
-            StorageReference ref = storageReference.child("images/"+ "1");
+            StorageReference ref = storageReference.child("images/"+ User.getCurrentUser().getUserID());
             ref.putFile(imageURI)
                     .addOnSuccessListener(taskSnapshot -> {
                         progressDialog.dismiss();
-
+                        ref.getDownloadUrl();
                         Toast.makeText(getApplicationContext(), "Uploaded", Toast.LENGTH_SHORT).show();
                     })
                     .addOnFailureListener(e -> {

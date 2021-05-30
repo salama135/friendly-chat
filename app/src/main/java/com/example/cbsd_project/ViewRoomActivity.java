@@ -1,19 +1,17 @@
 package com.example.cbsd_project;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.inputmethod.EditorInfoCompat;
-import androidx.core.view.inputmethod.InputConnectionCompat;
-import androidx.core.view.inputmethod.InputContentInfoCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -21,12 +19,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.inputmethod.EditorInfoCompat;
+import androidx.core.view.inputmethod.InputConnectionCompat;
+import androidx.core.view.inputmethod.InputContentInfoCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cbsd_project.adapters.MessagesAdapter;
 import com.example.cbsd_project.helpers.Constants;
@@ -41,10 +48,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
-public class ViewRoomActivity extends AppCompatActivity {
+public class ViewRoomActivity extends AppCompatActivity implements LocationListener {
 
     private DatabaseReference mDatabase;
 
@@ -63,6 +74,9 @@ public class ViewRoomActivity extends AppCompatActivity {
     private InputContentInfoCompat mCurrentInputContentInfo;
     private int mCurrentFlags;
 
+    LocationManager locationManager;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,25 +87,19 @@ public class ViewRoomActivity extends AppCompatActivity {
 
         mDatabase = FirebaseDatabase.getInstance().getReference(Room.firebasePath);
 
-        Room currentRoom = new Room();
-        currentRoom.setRoomID("0");
-
-        Room.setCurrentRoom(currentRoom);
-
-
         messagesDBHelper = new MessagesDBHelper(getApplicationContext());
 
         mDatabase = mDatabase.child(Room.getCurrentRoom().getRoomID()).child(Message.firebasePath);
 
         // Initialize messages
-        messages = new ArrayList<Message>();
+        messages = new ArrayList<>();
 
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                Log.e("Count " ,""+snapshot.getChildrenCount());
+            public void onDataChange(@NotNull DataSnapshot snapshot) {
+                Log.e("Count ", "" + snapshot.getChildrenCount());
                 messages.clear();
-                for (DataSnapshot messageSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
                     Log.e("Get Data", messageSnapshot.getKey());
 
                     Message message = messageSnapshot.getValue(Message.class);
@@ -100,7 +108,7 @@ public class ViewRoomActivity extends AppCompatActivity {
                     Log.e("Get Data", message.getSender());
                     Log.e("Get Data", message.getMessageType());
 
-                    if(message.getSender().equals(User.getCurrentUser().getName())){
+                    if (message.getSender().equals(User.getCurrentUser().getName())) {
                         message.setMessageViewType(Constants.MessageViewTypeSender);
                     } else {
                         message.setMessageViewType(Constants.MessageViewTypeReceiver);
@@ -126,7 +134,6 @@ public class ViewRoomActivity extends AppCompatActivity {
         listViewMessages.setLayoutManager(new LinearLayoutManager(this));
 
 
-
         editTextMessage = createEditTextWithContentMimeTypes(
                 new String[]{"image/png", "image/gif", "image/jpeg", "image/webp"});
 
@@ -136,7 +143,7 @@ public class ViewRoomActivity extends AppCompatActivity {
         // This declares that the IME can commit contents with
         // InputConnectionCompat#commitContent() if they match "image/png", "image/gif",
         // "image/jpeg", or "image/webp".
-        layout.addView(editTextMessage, 1);
+        layout.addView(editTextMessage, 3);
 
         if (savedInstanceState != null) {
             final InputContentInfoCompat previousInputContentInfo = InputContentInfoCompat.wrap(
@@ -150,7 +157,7 @@ public class ViewRoomActivity extends AppCompatActivity {
         ImageView buttonSend = (ImageView) findViewById(R.id.activity_view_room_buttonSend);
 
         buttonSend.setOnClickListener(v -> {
-            if(checkFields()){
+            if (checkFields()) {
                 String messageContent = editTextMessage.getText().toString();
 
                 String messageID = mDatabase.push().getKey();
@@ -174,12 +181,104 @@ public class ViewRoomActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        Button buttonViewPinnedMessages = (Button) findViewById(R.id.activity_view_room_buttonViewPinnedMessages);
+        Button buttonViewPinnedMessages = (Button)
+                findViewById(R.id.activity_view_room_buttonViewPinnedMessages);
 
         buttonViewPinnedMessages.setOnClickListener(v -> {
             Intent intent = new Intent(ViewRoomActivity.this, ShowPinnedMessagesActivity.class);
             startActivity(intent);
         });
+
+        Button buttonSearchChat = (Button)
+                findViewById(R.id.activity_view_room_buttonSearchChat);
+
+        buttonSearchChat.setOnClickListener(v -> {
+            Intent intent = new Intent(ViewRoomActivity.this, SearchChatActivity.class);
+            startActivity(intent);
+        });
+
+        ImageView imageViewShareLocation = (ImageView)
+                findViewById(R.id.activity_view_room_imageViewShareLocation);
+
+
+        if (ContextCompat.checkSelfPermission(ViewRoomActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(ViewRoomActivity.this,new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            },100);
+        }
+
+        imageViewShareLocation.setOnClickListener(v -> {
+               String address =  getLocation();
+
+               if(address != null){
+                   Log.e("address", address);
+
+                   String messageID = mDatabase.push().getKey();
+
+                   writeNewMessage(messageID,
+                           address,
+                           User.getCurrentUser().getName(),
+                           Constants.MessageTypeText,
+                           Constants.MessageViewTypeSender);
+
+                   Toast.makeText(getApplicationContext(), "Location Shared",
+                           Toast.LENGTH_SHORT).show();
+               }
+        });
+
+        ImageView imageViewSharePhoto = (ImageView)
+                findViewById(R.id.activity_view_room_imageViewSharePhoto);
+
+        imageViewSharePhoto.setOnClickListener(v -> {
+        });
+
+        ImageView imageViewShareFile = (ImageView)
+                findViewById(R.id.activity_view_room_imageViewShareFile);
+
+        imageViewShareFile.setOnClickListener(v -> {
+        });
+    }
+
+    @SuppressLint("MissingPermission")
+    private String getLocation() {
+        try {
+            locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,5000,5,ViewRoomActivity.this);
+            Geocoder geocoder = new Geocoder(ViewRoomActivity.this, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(
+                    locationManager.getLastKnownLocation(
+                            LocationManager.PASSIVE_PROVIDER).getLatitude(),
+                    locationManager.getLastKnownLocation(
+                            LocationManager.PASSIVE_PROVIDER).getLongitude(),1);
+
+            return addresses.get(0).getAddressLine(0);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 
     @Override
@@ -207,26 +306,25 @@ public class ViewRoomActivity extends AppCompatActivity {
 
         int id = item.getItemId();
 
-        switch (id) {
-            case Constants.MessageMenuPin:
-                messagesDBHelper.insertNewPinnedMessage(Room.getCurrentRoom().getRoomID(),
-                        selectedMessage.getSender(),
-                        selectedMessage.getContent(),
-                        selectedMessage.getMessageType(),
-                        selectedMessage.getMessageViewType());
+        if (id == Constants.MessageMenuPin) {
+            messagesDBHelper.insertNewPinnedMessage(
+                    Room.getCurrentRoom().getRoomID(),
+                    selectedMessage.getSender(),
+                    selectedMessage.getContent(),
+                    selectedMessage.getMessageType(),
+                    selectedMessage.getMessageViewType());
 
-                return true;
-            case Constants.MessageMenuEdit:
-
-                return true;
-            case Constants.MessageMenuDelete:
-
-                return true;
+            return true;
+//            case Constants.MessageMenuEdit:
+//
+//                return true;
+//            case Constants.MessageMenuDelete:
+//
+//                return true;
         }
 
         return super.onContextItemSelected(item);
     }
-
 
     private boolean checkFields() {
         return !editTextMessage.getText().toString().isEmpty();
@@ -239,7 +337,7 @@ public class ViewRoomActivity extends AppCompatActivity {
     }
 
     private boolean onCommitContent(InputContentInfoCompat inputContentInfo, int flags,
-                                    Bundle opts, String[] contentMimeTypes) {
+                                    String[] contentMimeTypes) {
         // Clear the temporary permission (if any).  See below about why we do this here.
         try {
             if (mCurrentInputContentInfo != null) {
@@ -297,7 +395,7 @@ public class ViewRoomActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
+    public void onSaveInstanceState(@NotNull Bundle savedInstanceState) {
         if (mCurrentInputContentInfo != null) {
             savedInstanceState.putParcelable(INPUT_CONTENT_INFO_KEY,
                     (Parcelable) mCurrentInputContentInfo.unwrap());
@@ -319,7 +417,6 @@ public class ViewRoomActivity extends AppCompatActivity {
      * the given content MIME types
      */
     private EditText createEditTextWithContentMimeTypes(String[] contentMimeTypes) {
-        final CharSequence hintText;
         final String[] mimeTypes;  // our own copy of contentMimeTypes.
         if (contentMimeTypes == null || contentMimeTypes.length == 0) {
             mimeTypes = new String[0];
@@ -332,14 +429,8 @@ public class ViewRoomActivity extends AppCompatActivity {
                 final InputConnection ic = super.onCreateInputConnection(editorInfo);
                 EditorInfoCompat.setContentMimeTypes(editorInfo, mimeTypes);
                 final InputConnectionCompat.OnCommitContentListener callback =
-                        new InputConnectionCompat.OnCommitContentListener() {
-                            @Override
-                            public boolean onCommitContent(InputContentInfoCompat inputContentInfo,
-                                                           int flags, Bundle opts) {
-                                return ViewRoomActivity.this.onCommitContent(
-                                        inputContentInfo, flags, opts, mimeTypes);
-                            }
-                        };
+                        (inputContentInfo, flags, opts) -> ViewRoomActivity.this.onCommitContent(
+                                inputContentInfo, flags, mimeTypes);
                 return InputConnectionCompat.createWrapper(ic, editorInfo, callback);
             }
         };
@@ -356,27 +447,4 @@ public class ViewRoomActivity extends AppCompatActivity {
         exitText.setHintTextColor(Color.WHITE);
         return exitText;
     }
-
-    /**
-     * Converts {@code flags} specified in {@link InputConnectionCompat#commitContent(
-     * InputConnection, EditorInfo, InputContentInfoCompat, int, Bundle)} to a human readable
-     * string.
-     *
-     * @param flags the 2nd parameter of
-     *              {@link InputConnectionCompat#commitContent(InputConnection, EditorInfo,
-     *              InputContentInfoCompat, int, Bundle)}
-     * @return a human readable string that corresponds to the given {@code flags}
-     */
-    private static String flagsToString(int flags) {
-        final ArrayList<String> tokens = new ArrayList<>();
-        if ((flags & InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION) != 0) {
-            tokens.add("INPUT_CONTENT_GRANT_READ_URI_PERMISSION");
-            flags &= ~InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION;
-        }
-        if (flags != 0) {
-            tokens.add("0x" + Integer.toHexString(flags));
-        }
-        return TextUtils.join(" | ", tokens);
-    }
-
 }

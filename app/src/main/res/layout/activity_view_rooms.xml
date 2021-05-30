@@ -6,24 +6,36 @@
     android:layout_height="match_parent"
     tools:context=".ViewRoomsActivity">
 
-    <Button
-        android:id="@+id/activity_view_rooms_buttonCreateRoom"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="346dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:text="@string/create_room"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/activity_view_rooms_buttonViewUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/show_user_info" />
+
+        <Button
+            android:id="@+id/activity_view_rooms_buttonCreateRoom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_room" />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/activity_view_rooms_listViewRooms"
         android:layout_width="0dp"
-        android:layout_height="570dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_view_rooms_buttonCreateRoom"
-        app:layout_constraintVertical_bias="0.110000014" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>
