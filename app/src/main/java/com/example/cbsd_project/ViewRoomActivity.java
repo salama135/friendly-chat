@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.example.cbsd_project.adapters.MessagesAdapter;
 import com.example.cbsd_project.helpers.Constants;
 import com.example.cbsd_project.helpers.MessagesDBHelper;
+import com.example.cbsd_project.helpers.ThemeUtil;
 import com.example.cbsd_project.models.Message;
 import com.example.cbsd_project.models.Room;
 import com.example.cbsd_project.models.User;
@@ -65,6 +66,9 @@ public class ViewRoomActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ThemeUtil.setTheme(this);
+
         setContentView(R.layout.activity_view_room);
 
         mDatabase = FirebaseDatabase.getInstance().getReference(Room.firebasePath);
@@ -143,8 +147,6 @@ public class ViewRoomActivity extends AppCompatActivity {
             }
         }
 
-
-
         ImageView buttonSend = (ImageView) findViewById(R.id.activity_view_room_buttonSend);
 
         buttonSend.setOnClickListener(v -> {
@@ -168,7 +170,7 @@ public class ViewRoomActivity extends AppCompatActivity {
         Button buttonEditRoom = (Button) findViewById(R.id.activity_view_room_buttonEditRoom);
 
         buttonEditRoom.setOnClickListener(v -> {
-            Intent intent = new Intent(ViewRoomActivity.this, EditRoomActivity.class);
+            Intent intent = new Intent(ViewRoomActivity.this, ChangeThemeActivity.class);
             startActivity(intent);
         });
 
@@ -181,6 +183,15 @@ public class ViewRoomActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onRestart() {
+        ThemeUtil.setTheme(this);
+        super.onRestart();
+        startActivity(getIntent());
+        finish();
+        overridePendingTransition(0, 0);
+    }
+
+    @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         getMenuInflater().inflate(R.menu.menu_message, menu);
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -190,9 +201,6 @@ public class ViewRoomActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
 
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
-
         Log.e("item", String.valueOf(item.getGroupId()));
 
         Message selectedMessage = messages.get(item.getGroupId());
@@ -201,7 +209,7 @@ public class ViewRoomActivity extends AppCompatActivity {
 
         switch (id) {
             case Constants.MessageMenuPin:
-                messagesDBHelper.insertNewMessage(Room.getCurrentRoom().getRoomID(),
+                messagesDBHelper.insertNewPinnedMessage(Room.getCurrentRoom().getRoomID(),
                         selectedMessage.getSender(),
                         selectedMessage.getContent(),
                         selectedMessage.getMessageType(),

@@ -6,38 +6,64 @@
     android:layout_height="wrap_content"
     android:layout_margin="10dp">
 
-    <TextView
-        android:id="@+id/item_message_sender_textViewMessage"
-        android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_message_gray"
-        android:maxWidth="250dp"
-        android:padding="10dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@android:color/black"
-        app:layout_constraintEnd_toStartOf="@+id/item_message_sender_imageViewUserAvatar"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="This is a message" />
-
-    <TextView
-        android:id="@+id/item_message_sender_textViewSender"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="10dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        app:layout_constraintEnd_toEndOf="@+id/item_message_sender_textViewMessage"
-        app:layout_constraintTop_toBottomOf="@+id/item_message_sender_textViewMessage"
-        tools:text="FirstName LastName" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/item_message_sender_imageViewUserAvatar"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginEnd="8dp"
-        android:src="@drawable/ic_account_circle_black_36dp"
+        android:layout_margin="10dp"
+        app:cardBackgroundColor="#FFFFFF"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp"
+        app:cardMaxElevation="12dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/item_message_sender_textViewMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@android:color/transparent"
+                android:maxWidth="250dp"
+                android:padding="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/black"
+                app:layout_constraintEnd_toStartOf="@+id/item_message_sender_imageViewUserAvatar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="This is a message" />
+
+            <TextView
+                android:id="@+id/item_message_sender_textViewSender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                app:layout_constraintEnd_toEndOf="@+id/item_message_sender_textViewMessage"
+                app:layout_constraintTop_toBottomOf="@+id/item_message_sender_textViewMessage"
+                tools:text="FirstName LastName" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/item_message_sender_imageViewUserAvatar"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_account_circle_black_36dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

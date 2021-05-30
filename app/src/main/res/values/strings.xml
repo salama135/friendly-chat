@@ -42,4 +42,12 @@
     <string name="view_pinned_messages">View Pinned Messages</string>
     <string name="edit_room">Edit Room</string>
 
+    <string name="change_theme">Change Theme</string>
+
+    <string name="theme_default">Default</string>
+    <string name="theme_lime">Lime</string>
+    <string name="theme_red">Red</string>
+    <string name="theme_green">Green</string>
+    <string name="theme_blue">Blue</string>
+
 </resources>

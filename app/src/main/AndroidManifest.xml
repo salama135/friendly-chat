@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ShowPinnedMessagesActivity"></activity>
+        <activity android:name=".ShowPinnedMessagesActivity" />
         <activity android:name=".ChangeThemeActivity" />
         <activity android:name=".ViewRoomActivity" />
         <activity android:name=".EditRoomActivity" />

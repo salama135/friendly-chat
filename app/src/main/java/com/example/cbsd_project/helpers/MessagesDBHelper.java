@@ -28,8 +28,11 @@ public class MessagesDBHelper extends SQLiteOpenHelper {
 
         db.execSQL("create table pinned_messages(" +
                 "pinnedMessageID integer primary key autoincrement, " +
-                "messageID text, " +
-                "FOREIGN KEY(messageID) REFERENCES messages (messageID)" +
+                "roomID text not null, " +
+                "sender text not null, " +
+                "content text not null, " +
+                "messageType text not null, " +
+                "messageViewType text not null" +
                 ")");
     }
 
@@ -39,7 +42,6 @@ public class MessagesDBHelper extends SQLiteOpenHelper {
         db.execSQL("drop table if exists pinned_messages");
         onCreate(db);
     }
-
 
     public void insertNewMessage(String roomID, String sender, String content,
                                  String messageType, String messageViewType){
@@ -55,11 +57,16 @@ public class MessagesDBHelper extends SQLiteOpenHelper {
         chatDatabase.insert("messages", null, newMessage);
     }
 
-    public void insertNewPinnedMessage(String messageID){
+    public void insertNewPinnedMessage(String roomID, String sender, String content,
+                                       String messageType, String messageViewType){
         chatDatabase = getWritableDatabase();
 
         ContentValues newPinnedMessage = new ContentValues();
-        newPinnedMessage.put("messageID", messageID);
+        newPinnedMessage.put("roomID", roomID);
+        newPinnedMessage.put("sender", sender);
+        newPinnedMessage.put("content", content);
+        newPinnedMessage.put("messageType", messageType);
+        newPinnedMessage.put("messageViewType", messageViewType);
 
         chatDatabase.insert("pinned_messages", null, newPinnedMessage);
     }
@@ -76,16 +83,17 @@ public class MessagesDBHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor getPinnedMessages() {
+    public Cursor getPinnedMessages(String roomID) {
         chatDatabase = getReadableDatabase();
-        String MY_QUERY = "SELECT " +
-                "messages.sender, " +
-                "messages.content, " +
-                "messages.messageType, " +
-                "messages.messageViewType " +
-                "FROM messages INNER JOIN pinned_messages " +
-                "ON messages.roomID = pinned_messages.roomID";
+//        String MY_QUERY = "SELECT " +
+//                "messages.sender, " +
+//                "messages.content, " +
+//                "messages.messageType, " +
+//                "messages.messageViewType " +
+//                "FROM messages INNER JOIN pinned_messages " +
+//                "ON messages.roomID = pinned_messages.roomID";
 
+        String MY_QUERY = "select * from pinned_messages where roomID = " + roomID + "";
         Cursor cursor = chatDatabase.rawQuery(MY_QUERY, null);
         if (cursor != null){
             cursor.moveToFirst();

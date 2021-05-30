@@ -6,10 +6,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.cbsd_project.adapters.MessagesAdapter;
 import com.example.cbsd_project.helpers.MessagesDBHelper;
 import com.example.cbsd_project.models.Message;
+import com.example.cbsd_project.models.Room;
 
 import java.util.ArrayList;
 
@@ -38,7 +40,7 @@ public class ShowPinnedMessagesActivity extends AppCompatActivity {
 
         messagesDBHelper = new MessagesDBHelper(getApplicationContext());
 
-        Cursor cursor = messagesDBHelper.getPinnedMessages();
+        Cursor cursor = messagesDBHelper.getPinnedMessages(Room.getCurrentRoom().getRoomID());
 
         while(!cursor.isAfterLast()){
             Message message = new Message(
@@ -47,12 +49,12 @@ public class ShowPinnedMessagesActivity extends AppCompatActivity {
                     cursor.getString(cursor.getColumnIndex("messageType")),
                     cursor.getString(cursor.getColumnIndex("messageViewType")));
 
+            Log.e("Get Pinned Message", message.getContent());
+
             messages.add(message);
 
             cursor.moveToNext();
         }
+        adapter.notifyDataSetChanged();
     }
-
-
-
 }

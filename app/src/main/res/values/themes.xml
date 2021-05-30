@@ -12,15 +12,54 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-
-
     </style>
 
-    <style name="Theme.YOUR_CUSTOM_THEME" parent="Theme.AppCompat.Light">
 
-        <!-- Define styles for YOUR_CUSTOM_THEME here. -->
+    <style name="OverlayThemeDefault" parent="AppTheme">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
 
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="android:colorBackground">@color/colorPrimary</item>
     </style>
+
+    <style name="OverlayThemeLime" parent="AppTheme">
+        <item name="colorPrimary">@color/md_lime_500</item>
+        <item name="colorPrimaryDark">@color/md_lime_700</item>
+        <item name="colorAccent">@color/md_amber_A400</item>
+
+        <item name="colorButtonNormal">@color/md_lime_500</item>
+        <item name="android:colorBackground">@color/md_lime_500</item>
+    </style>
+
+    <style name="OverlayThemeRed" parent="AppTheme">
+        <item name="colorPrimary">@color/md_red_500</item>
+        <item name="colorPrimaryDark">@color/md_red_700</item>
+        <item name="colorAccent">@color/md_yellow_A400</item>
+
+        <item name="colorButtonNormal">@color/md_red_500</item>
+        <item name="android:colorBackground">@color/md_red_500</item>
+    </style>
+
+    <style name="OverlayThemeGreen" parent="AppTheme">
+        <item name="colorPrimary">@color/md_green_500</item>
+        <item name="colorPrimaryDark">@color/md_green_700</item>
+        <item name="colorAccent">@color/md_pink_A400</item>
+
+        <item name="colorButtonNormal">@color/md_green_500</item>
+        <item name="android:colorBackground">@color/md_green_500</item>
+    </style>
+
+    <style name="OverlayThemeBlue" parent="AppTheme">
+        <item name="colorPrimary">@color/md_blue_500</item>
+        <item name="colorPrimaryDark">@color/md_blue_700</item>
+        <item name="colorAccent">@color/md_turquoise_A400</item>
+
+        <item name="colorButtonNormal">@color/md_blue_500</item>
+        <item name="android:colorBackground">@color/md_blue_500</item>
+    </style>
+
 
     <style name="Theme.CBSDProject.NoActionBar">
         <item name="windowActionBar">false</item>

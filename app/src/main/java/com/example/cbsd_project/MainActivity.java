@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.cbsd_project.helpers.ThemeUtil;
 import com.example.cbsd_project.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -16,6 +17,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ThemeUtil.setTheme(this);
+
         setContentView(R.layout.activity_main);
 
         Button buttonSignUp = (Button) findViewById(R.id.activity_main_buttonSignUp);
