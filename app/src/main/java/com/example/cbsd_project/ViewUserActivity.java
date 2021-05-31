@@ -113,7 +113,8 @@ public class ViewUserActivity extends AppCompatActivity {
             ref.putFile(imageURI)
                     .addOnSuccessListener(taskSnapshot -> {
                         progressDialog.dismiss();
-                        ref.getDownloadUrl();
+                        
+                        Log.e("URL", ref.getDownloadUrl().toString());
                         Toast.makeText(getApplicationContext(), "Uploaded", Toast.LENGTH_SHORT).show();
                     })
                     .addOnFailureListener(e -> {
