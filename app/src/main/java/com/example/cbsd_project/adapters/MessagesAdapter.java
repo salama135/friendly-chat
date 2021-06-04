@@ -1,22 +1,20 @@
 package com.example.cbsd_project.adapters;
 
+import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.cbsd_project.helpers.Constants;
 import com.example.cbsd_project.R;
 import com.example.cbsd_project.models.Message;
@@ -57,8 +55,6 @@ public class MessagesAdapter extends
         }
     }
 
-    // Provide a direct reference to each of the views within a data item
-    // Used to cache the views within the item layout for fast access
     public static class ViewHolderTextSender extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
@@ -88,8 +84,6 @@ public class MessagesAdapter extends
         }
     }
 
-    // Provide a direct reference to each of the views within a data item
-    // Used to cache the views within the item layout for fast access
     public static class ViewHolderWebReceiver extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
@@ -119,8 +113,6 @@ public class MessagesAdapter extends
         }
     }
 
-    // Provide a direct reference to each of the views within a data item
-    // Used to cache the views within the item layout for fast access
     public static class ViewHolderWebSender extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
@@ -150,6 +142,65 @@ public class MessagesAdapter extends
         }
     }
 
+    public static class ViewHolderImageReceiver extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
+        // Your holder should contain a member variable
+        // for any view that will be set as you render a row
+        public ImageView imageViewPhoto;
+        public TextView textViewSender;
+        public ImageView imageViewUserAvatar;
+
+        // We also create a constructor that accepts the entire item row
+        // and does the view lookups to find each subview
+        public ViewHolderImageReceiver(View itemView) {
+            // Stores the itemView in a public final member variable that can be used
+            // to access the context from any ViewHolder instance.
+            super(itemView);
+
+            imageViewPhoto = (ImageView) itemView.findViewById(R.id.item_message_image_receiver_imageViewPhoto);
+            textViewSender = (TextView) itemView.findViewById(R.id.item_message_image_receiver_textViewSender);
+            imageViewUserAvatar = (ImageView) itemView.findViewById(R.id.item_message_image_receiver_imageViewUserAvatar);
+
+            itemView.setOnCreateContextMenuListener(this); //REGISTER ON CREATE MENU LISTENER
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            MenuItem Edit = menu.add(this.getAdapterPosition(), 1, 1, "Edit");
+            MenuItem Delete = menu.add(this.getAdapterPosition(), 2, 2, "Delete");
+            MenuItem Pin = menu.add(this.getAdapterPosition(), 3, 3, "Pin");
+        }
+    }
+
+    public static class ViewHolderImageSender extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
+        // Your holder should contain a member variable
+        // for any view that will be set as you render a row
+        public ImageView imageViewPhoto;
+        public TextView textViewSender;
+        public ImageView imageViewUserAvatar;
+
+        // We also create a constructor that accepts the entire item row
+        // and does the view lookups to find each subview
+        public ViewHolderImageSender(View itemView) {
+            // Stores the itemView in a public final member variable that can be used
+            // to access the context from any ViewHolder instance.
+            super(itemView);
+
+            imageViewPhoto = (ImageView) itemView.findViewById(R.id.item_message_image_sender_imageViewPhoto);
+            textViewSender = (TextView) itemView.findViewById(R.id.item_message_image_sender_textViewSender);
+            imageViewUserAvatar = (ImageView) itemView.findViewById(R.id.item_message_image_sender_imageViewUserAvatar);
+
+            itemView.setOnCreateContextMenuListener(this); //REGISTER ON CREATE MENU LISTENER
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            MenuItem Edit = menu.add(this.getAdapterPosition(), 1, 1, "Edit");
+            MenuItem Delete = menu.add(this.getAdapterPosition(), 2, 2, "Delete");
+            MenuItem Pin = menu.add(this.getAdapterPosition(), 3, 3, "Pin");
+        }
+    }
+
+
     // ... view holders defined above...
 
     // Store a member variable for the contacts
@@ -159,9 +210,13 @@ public class MessagesAdapter extends
             RECEIVER_WEB = 0,
             RECEIVER_IMAGE = 1,
             RECEIVER_TEXT = 2,
-            SENDER_WEB = 3,
-            SENDER_IMAGE = 4,
-            SENDER_TEXT = 5;
+            RECEIVER_LOCATION = 3,
+            SENDER_WEB = 4,
+            SENDER_IMAGE = 5,
+            SENDER_TEXT = 6,
+            SENDER_LOCATION = 7;
+
+    Context context;
 
     // Pass in the contact array into the constructor
     public MessagesAdapter(List<Message> messages) {
@@ -180,17 +235,30 @@ public class MessagesAdapter extends
             switch (mMessages.get(position).getMessageType()) {
                 case Constants.MessageTypeText:
                     if (mMessages.get(position).getMessageViewType() != null) {
-                        return ((mMessages.get(position).getMessageViewType()).equals(Constants.MessageViewTypeReceiver))? RECEIVER_TEXT : SENDER_TEXT;
+                        return ((mMessages.get(position).getMessageViewType()).
+                                equals(Constants.MessageViewTypeReceiver))?
+                                RECEIVER_TEXT : SENDER_TEXT;
                     }
                     break;
-                case Constants.MessageTypePhoto:
+                case Constants.MessageTypeImage:
                     if (mMessages.get(position).getMessageViewType() != null) {
-                        return ((mMessages.get(position).getMessageViewType()).equals(Constants.MessageViewTypeReceiver))? RECEIVER_IMAGE : SENDER_IMAGE;
+                        return ((mMessages.get(position).getMessageViewType()).
+                                equals(Constants.MessageViewTypeReceiver))?
+                                RECEIVER_IMAGE : SENDER_IMAGE;
                     }
                     break;
                 case Constants.MessageTypeGif:
                     if (mMessages.get(position).getMessageViewType() != null) {
-                        return ((mMessages.get(position).getMessageViewType()).equals(Constants.MessageViewTypeReceiver))? RECEIVER_WEB : SENDER_WEB;
+                        return ((mMessages.get(position).getMessageViewType()).
+                                equals(Constants.MessageViewTypeReceiver))?
+                                RECEIVER_WEB : SENDER_WEB;
+                    }
+                    break;
+                case Constants.MessageTypeLocation:
+                    if (mMessages.get(position).getMessageViewType() != null) {
+                        return ((mMessages.get(position).getMessageViewType()).
+                                equals(Constants.MessageViewTypeReceiver))?
+                                RECEIVER_LOCATION : SENDER_LOCATION;
                     }
                     break;
             }
@@ -203,6 +271,8 @@ public class MessagesAdapter extends
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        context = parent.getContext();
 
         RecyclerView.ViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -227,6 +297,16 @@ public class MessagesAdapter extends
             viewHolder = new ViewHolderWebSender(v4);
             return viewHolder;
         } else
+        if (viewType == RECEIVER_IMAGE) {
+            View v1 = inflater.inflate(R.layout.item_message_image_receiver, parent, false);
+            viewHolder = new ViewHolderImageReceiver(v1);
+            return viewHolder;
+        } else
+        if (viewType == SENDER_IMAGE) {
+            View v2 = inflater.inflate(R.layout.item_message_image_sender, parent, false);
+            viewHolder = new ViewHolderImageSender(v2);
+            return viewHolder;
+        }
 
         return null;
     }
@@ -251,7 +331,16 @@ public class MessagesAdapter extends
         if (holder.getItemViewType() == SENDER_WEB) {
             ViewHolderWebSender viewHolderWebSender = (ViewHolderWebSender) holder;
             configureViewHolderWebSender(viewHolderWebSender, message);
+        } else
+        if (holder.getItemViewType() == RECEIVER_IMAGE) {
+            ViewHolderImageReceiver viewHolderImageReceiver = (ViewHolderImageReceiver) holder;
+            configureViewHolderImageReceiver(viewHolderImageReceiver, message);
+        } else
+        if (holder.getItemViewType() == SENDER_IMAGE) {
+            ViewHolderImageSender viewHolderImageSender = (ViewHolderImageSender) holder;
+            configureViewHolderImageSender(viewHolderImageSender, message);
         }
+
     }
 
     private void configureViewHolderTextReceiver(ViewHolderTextReceiver viewHolderTextReceiver, Message message) {
@@ -295,6 +384,32 @@ public class MessagesAdapter extends
             TextView textViewSender = viewHolderWebSender.textViewSender;
             textViewSender.setText(message.getSender());
             ImageView imageViewUserAvatar = viewHolderWebSender.imageViewUserAvatar;
+        }
+    }
+
+    private void configureViewHolderImageReceiver(ViewHolderImageReceiver viewHolderImageReceiver, Message message) {
+        if (message != null) {
+            ImageView imageViewPhoto = viewHolderImageReceiver.imageViewPhoto;
+            Glide.with(context)
+                    .load(message.getContent())
+                    .into(imageViewPhoto);
+
+            TextView textViewSender = viewHolderImageReceiver.textViewSender;
+            textViewSender.setText(message.getSender());
+            ImageView imageViewUserAvatar = viewHolderImageReceiver.imageViewUserAvatar;
+        }
+    }
+
+    private void configureViewHolderImageSender(ViewHolderImageSender viewHolderImageSender, Message message) {
+        if (message != null) {
+            ImageView imageViewPhoto = viewHolderImageSender.imageViewPhoto;
+            Glide.with(context)
+                    .load(message.getContent())
+                    .into(imageViewPhoto);
+
+            TextView textViewSender = viewHolderImageSender.textViewSender;
+            textViewSender.setText(message.getSender());
+            ImageView imageViewUserAvatar = viewHolderImageSender.imageViewUserAvatar;
         }
     }
 

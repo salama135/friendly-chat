@@ -88,12 +88,11 @@ public class SignUpActivity extends AppCompatActivity {
                                     }
                                 });
 
-                        // add to DB
-//                            addAccountToDB(name, email, password, "");
+                        // add to firebase
                         writeNewUser(user.getUid(), name, email);
 
                         // go to home
-                        Intent intent = new Intent(SignUpActivity.this, ViewUserActivity.class);
+                        Intent intent = new Intent(SignUpActivity.this, ViewRoomsActivity.class);
                         startActivity(intent);
 
                     } else {
@@ -113,33 +112,4 @@ public class SignUpActivity extends AppCompatActivity {
 
         mDatabase.child(User.firebasePath).child(userID).setValue(currentUser);
     }
-
-//    private void addAccountToDB(String name, String email, String password, String photoUri){
-//
-//        // Create a new user with a first and last name
-//        Map<String, Object> user = new HashMap<>();
-//        user.put("name", name);
-//        user.put("email", email);
-//        user.put("password", password);
-//        user.put("photoUri", photoUri);
-//
-//        String userPath = email.split("@", 2)[0];
-//
-//        db.collection("users").document(userPath)
-//                .set(user)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Log.d(TAG, "DocumentSnapshot successfully written!");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.w(TAG, "Error writing document", e);
-//                        Toast.makeText(getApplicationContext(), "failed to add doc",
-//                                Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
 }

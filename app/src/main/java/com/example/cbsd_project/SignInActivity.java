@@ -79,7 +79,7 @@ public class SignInActivity extends AppCompatActivity {
 
             // go to home
 //            Intent intent = new Intent(MainActivity.this, ViewUserActivity.class);
-            Intent intent = new Intent(SignInActivity.this, ViewRoomActivity.class);
+            Intent intent = new Intent(SignInActivity.this, ViewRoomsActivity.class);
             startActivity(intent);
 
         }  // No user is signed in
@@ -109,8 +109,7 @@ public class SignInActivity extends AppCompatActivity {
                             User.setCurrentUser(currentUser);
 
                             // go to home
-//                            Intent intent = new Intent(SignInActivity.this, ViewUserActivity.class);
-                            Intent intent = new Intent(SignInActivity.this, ViewRoomActivity.class);
+                            Intent intent = new Intent(SignInActivity.this, ViewRoomsActivity.class);
                             startActivity(intent);
 
                         } else {

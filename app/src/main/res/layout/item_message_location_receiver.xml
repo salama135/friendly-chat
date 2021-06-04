@@ -24,25 +24,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/item_message_webview_receiver_mapView"
-                android:layout_width="0dp"
-                android:layout_height="230dp"
-                android:layout_margin="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/item_message_webview_receiver_imageViewUserAvatar"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <TextView
                 android:id="@+id/item_message_webview_receiver_textViewSender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="10dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                app:layout_constraintEnd_toEndOf="@+id/item_message_webview_receiver_mapView"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/item_message_webview_receiver_mapView"
-                app:layout_constraintTop_toBottomOf="@+id/item_message_webview_receiver_mapView"
+                tools:layout_editor_absoluteX="56dp"
+                tools:layout_editor_absoluteY="240dp"
                 tools:text="FirstName LastName" />
 
             <de.hdodenhof.circleimageview.CircleImageView

@@ -4,14 +4,17 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -42,22 +45,30 @@ import com.example.cbsd_project.helpers.ThemeUtil;
 import com.example.cbsd_project.models.Message;
 import com.example.cbsd_project.models.Room;
 import com.example.cbsd_project.models.User;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class ViewRoomActivity extends AppCompatActivity implements LocationListener {
 
     private DatabaseReference mDatabase;
+    private StorageReference storageReference;
 
     final String TAG = "ViewRoomActivity";
 
@@ -76,6 +87,8 @@ public class ViewRoomActivity extends AppCompatActivity implements LocationListe
 
     LocationManager locationManager;
 
+    public static final int PICK_PHOTO = 1;
+    Uri imageURI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +98,8 @@ public class ViewRoomActivity extends AppCompatActivity implements LocationListe
 
         setContentView(R.layout.activity_view_room);
 
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
         mDatabase = FirebaseDatabase.getInstance().getReference(Room.firebasePath);
 
         messagesDBHelper = new MessagesDBHelper(getApplicationContext());
@@ -232,13 +247,68 @@ public class ViewRoomActivity extends AppCompatActivity implements LocationListe
                 findViewById(R.id.activity_view_room_imageViewSharePhoto);
 
         imageViewSharePhoto.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_PHOTO);
         });
+    }
 
-        ImageView imageViewShareFile = (ImageView)
-                findViewById(R.id.activity_view_room_imageViewShareFile);
+    private void uploadImage(Bitmap bitmap) {
+        if(imageURI != null)
+        {
+            String messageID = mDatabase.push().getKey();
+            StorageReference ref = storageReference.child("images/"+ messageID);
 
-        imageViewShareFile.setOnClickListener(v -> {
-        });
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            UploadTask uploadTask = ref.putBytes(data);
+
+            Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
+                if (!task.isSuccessful()) {
+                    throw Objects.requireNonNull(task.getException());
+                }
+                // Continue with the task to get the download URL
+                return ref.getDownloadUrl();
+            }).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    assert downloadUri != null;
+                    imageURI = downloadUri;
+                    Toast.makeText(getApplicationContext(), "Uploaded", Toast.LENGTH_SHORT).show();
+
+                    writeNewMessage(messageID,
+                            downloadUri.toString(),
+                            User.getCurrentUser().getName(),
+                            Constants.MessageTypeImage,
+                            Constants.MessageViewTypeSender);
+                } else {
+                    // Handle failures
+                    Toast.makeText(getApplicationContext(), "Failed To Upload", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == PICK_PHOTO && resultCode == RESULT_OK
+                && data != null && data.getData() != null )
+        {
+            imageURI = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageURI);
+                uploadImage(bitmap);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
 
     @SuppressLint("MissingPermission")

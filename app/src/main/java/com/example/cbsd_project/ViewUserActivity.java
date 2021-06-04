@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.example.cbsd_project.helpers.ThemeUtil;
 import com.example.cbsd_project.models.User;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,22 +34,23 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ViewUserActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
-    private FirebaseStorage storage;
     private StorageReference storageReference;
 
     final String TAG = "ViewUserActivity";
@@ -60,11 +64,12 @@ public class ViewUserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ThemeUtil.setTheme(this);
+
         setContentView(R.layout.activity_view_user);
 
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
-        storage = FirebaseStorage.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
         editTextName = (EditText) findViewById(R.id.activity_view_user_editTextName);
@@ -86,7 +91,7 @@ public class ViewUserActivity extends AppCompatActivity {
 
         buttonUpdateInfo.setOnClickListener(v -> {
             String name = editTextName.getText().toString();
-            updateProfile(name, "");
+            updateProfile(name, imageURI.toString());
         });
 
         buttonSignOut.setOnClickListener(v -> {
@@ -99,10 +104,11 @@ public class ViewUserActivity extends AppCompatActivity {
         buttonUploadPhoto.setOnClickListener(v -> {
             uploadImage();
         });
+
+        checkCurrentUser();
     }
 
     private void uploadImage() {
-//        ((BitmapDrawable) imageView.getDrawable()).getBitmap()
         if(imageURI != null)
         {
             final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -110,22 +116,35 @@ public class ViewUserActivity extends AppCompatActivity {
             progressDialog.show();
 
             StorageReference ref = storageReference.child("images/"+ User.getCurrentUser().getUserID());
-            ref.putFile(imageURI)
-                    .addOnSuccessListener(taskSnapshot -> {
-                        progressDialog.dismiss();
-                        
-                        Log.e("URL", ref.getDownloadUrl().toString());
-                        Toast.makeText(getApplicationContext(), "Uploaded", Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> {
-                        progressDialog.dismiss();
-                        Toast.makeText(getApplicationContext(), "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnProgressListener(taskSnapshot -> {
-                        double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
-                                .getTotalByteCount());
-                        progressDialog.setMessage("Uploaded "+(int)progress+"%");
-                    });
+
+            imageViewUserPhoto.setDrawingCacheEnabled(true);
+            imageViewUserPhoto.buildDrawingCache();
+            Bitmap bitmap = ((BitmapDrawable) imageViewUserPhoto.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            UploadTask uploadTask = ref.putBytes(data);
+
+            Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
+                if (!task.isSuccessful()) {
+                    throw Objects.requireNonNull(task.getException());
+                }
+                // Continue with the task to get the download URL
+                return ref.getDownloadUrl();
+            }).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    assert downloadUri != null;
+                    imageURI = downloadUri;
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "Uploaded", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Handle failures
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "Failed To Upload", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
@@ -146,52 +165,6 @@ public class ViewUserActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-    }
-
-    public Bitmap loadFromUri(Uri photoUri) {
-        Bitmap image = null;
-        try {
-            // check version of Android on device
-            if(Build.VERSION.SDK_INT > 27){
-                // on newer versions of Android, use the new decodeBitmap method
-                ImageDecoder.Source source = ImageDecoder.createSource(this.getContentResolver(), photoUri);
-                image = ImageDecoder.decodeBitmap(source);
-            } else {
-                // support older versions of Android by using getBitmap
-                image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return image;
-    }
-
-//    public void uploadPhoto(Bitmap image, final String path, final RetrievalEventListener<String> retrievalEventListener){
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        image.compress(Bitmap.CompressFormat.JPEG,100, baos);
-//        byte[] imageData = baos.toByteArray();
-//        final StorageReference imageReference = mStorageRef.child(path);
-//
-//        UploadTask uploadTask = imageReference.putBytes(imageData);
-//        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                imageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                    @Override
-//                    public void onSuccess(Uri uri) {
-//                        retrievalEventListener.OnDataRetrieved(uri.toString());
-//                    }
-//                });
-//
-//            }
-//        });
-//    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        checkCurrentUser();
     }
 
     public void checkCurrentUser() {
@@ -223,12 +196,15 @@ public class ViewUserActivity extends AppCompatActivity {
             String email = user.getEmail();
             Uri photoUrl = user.getPhotoUrl();
 
+            if (photoUrl != null) {
+                // Download directly from StorageReference using Glide
+                Glide.with(this /* context */)
+                        .load(photoUrl.toString())
+                        .into(imageViewUserPhoto);
+            }
+
             editTextName.setText(name);
             editTextEmail.setText(email);
-
-            if(photoUrl != null){
-                imageURI = photoUrl;
-            }
 
             // Check if user's email is verified
 //            boolean emailVerified = user.isEmailVerified();
@@ -254,7 +230,7 @@ public class ViewUserActivity extends AppCompatActivity {
         user.updateProfile(profileUpdates)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Log.d(TAG, "User profile updated.");
+                        Log.e(TAG, "User profile updated.");
                     }
                 });
         // [END update_profile]

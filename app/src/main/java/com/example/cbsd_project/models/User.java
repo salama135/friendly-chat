@@ -3,7 +3,6 @@ package com.example.cbsd_project.models;
 public class User {
 
     public static String firebasePath = "users";
-    public static String firebaseCountName = "user-count";
 
     private static User currentUser = null;
 
