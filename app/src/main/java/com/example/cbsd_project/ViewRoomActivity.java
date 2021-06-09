@@ -400,8 +400,7 @@ public class ViewRoomActivity extends AppCompatActivity implements LocationListe
         return !editTextMessage.getText().toString().isEmpty();
     }
 
-    public void writeNewMessage(String messageID, String content, String sender,
-                                String messageType, String messageViewType) {
+    public void writeNewMessage(String messageID, String content, String sender, String messageType, String messageViewType) {
         Message message = new Message(content, sender, messageType, messageViewType);
         mDatabase.child(messageID).setValue(message);
     }

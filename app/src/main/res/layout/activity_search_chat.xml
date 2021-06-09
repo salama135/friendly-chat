@@ -4,6 +4,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     tools:context=".SearchChatActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="387dp"
+        tools:layout_editor_absoluteY="1dp">
+
+        <LinearLayout
+            android:layout_width="409dp"
+            android:layout_height="86dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/activity_search_chat_txtbox"
+                android:layout_width="323dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Enter Text"
+                android:inputType="textPersonName" />
+
+            <Button
+                android:id="@+id/activity_search_searchbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Search" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/activity_search_listViewMessages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:background="@color/fui_transparent"
+            android:paddingHorizontal="16dp">
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
