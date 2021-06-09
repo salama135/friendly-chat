@@ -9,9 +9,11 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.cbsd_project.adapters.MessagesAdapter;
+import com.example.cbsd_project.helpers.Constants;
 import com.example.cbsd_project.helpers.MessagesDBHelper;
 import com.example.cbsd_project.models.Message;
 import com.example.cbsd_project.models.Room;
+import com.example.cbsd_project.models.User;
 
 import java.util.ArrayList;
 
@@ -50,6 +52,12 @@ public class ShowPinnedMessagesActivity extends AppCompatActivity {
                     cursor.getString(cursor.getColumnIndex("messageViewType")));
 
             Log.e("Get Pinned Message", message.getContent());
+
+            if (message.getSender().equals(User.getCurrentUser().getName())) {
+                message.setMessageViewType(Constants.MessageViewTypeSender);
+            } else {
+                message.setMessageViewType(Constants.MessageViewTypeReceiver);
+            }
 
             messages.add(message);
 

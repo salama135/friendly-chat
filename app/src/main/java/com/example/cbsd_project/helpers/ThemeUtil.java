@@ -49,5 +49,4 @@ public class ThemeUtil {
     public static void setCurrentTheme(Theme theme) {
         ThemeUtil.CurrentTheme = theme;
     }
-
 }

@@ -172,7 +172,7 @@ public class ViewUserActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // User is signed in
-            Toast.makeText(getApplicationContext(), "Already SignedIn", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), "Already SignedIn", Toast.LENGTH_LONG).show();
 
             getUserProfile();
 

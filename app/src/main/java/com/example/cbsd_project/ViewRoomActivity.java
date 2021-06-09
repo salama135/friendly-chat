@@ -158,7 +158,7 @@ public class ViewRoomActivity extends AppCompatActivity implements LocationListe
         // This declares that the IME can commit contents with
         // InputConnectionCompat#commitContent() if they match "image/png", "image/gif",
         // "image/jpeg", or "image/webp".
-        layout.addView(editTextMessage, 3);
+        layout.addView(editTextMessage, 2);
 
         if (savedInstanceState != null) {
             final InputContentInfoCompat previousInputContentInfo = InputContentInfoCompat.wrap(
@@ -214,7 +214,6 @@ public class ViewRoomActivity extends AppCompatActivity implements LocationListe
 
         ImageView imageViewShareLocation = (ImageView)
                 findViewById(R.id.activity_view_room_imageViewShareLocation);
-
 
         if (ContextCompat.checkSelfPermission(ViewRoomActivity.this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
