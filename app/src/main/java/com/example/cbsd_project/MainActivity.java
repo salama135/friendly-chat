@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(), "Welcome " + name, Toast.LENGTH_LONG).show();
 
-
             User currentUser = new User(name, user.getEmail(), user.getUid());
             User.setCurrentUser(currentUser);
 

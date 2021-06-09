@@ -64,6 +64,5 @@ public class ChangeThemeActivity extends AppCompatActivity {
             finish();
             overridePendingTransition(0, 0);
         });
-
     }
 }

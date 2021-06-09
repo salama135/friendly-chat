@@ -19,6 +19,7 @@ public class MessagesDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table messages(" +
                 "messageID integer primary key autoincrement, " +
+                "messageFireBaseID text not null, " +
                 "roomID text not null, " +
                 "sender text not null, " +
                 "content text not null, " +
@@ -43,12 +44,13 @@ public class MessagesDBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertNewMessage(String roomID, String sender, String content,
+    public void insertNewMessage(String roomID, String messageFireBaseID, String sender, String content,
                                  String messageType, String messageViewType){
         chatDatabase = getWritableDatabase();
 
         ContentValues newMessage = new ContentValues();
         newMessage.put("roomID", roomID);
+        newMessage.put("messageFireBaseID", messageFireBaseID);
         newMessage.put("sender", sender);
         newMessage.put("content", content);
         newMessage.put("messageType", messageType);

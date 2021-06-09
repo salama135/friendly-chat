@@ -340,7 +340,6 @@ public class MessagesAdapter extends
             ViewHolderImageSender viewHolderImageSender = (ViewHolderImageSender) holder;
             configureViewHolderImageSender(viewHolderImageSender, message);
         }
-
     }
 
     private void configureViewHolderTextReceiver(ViewHolderTextReceiver viewHolderTextReceiver, Message message) {
