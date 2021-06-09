@@ -1,0 +1,169 @@
+@startuml
+
+title __ADAPTERS's Class Diagram__\n
+
+  namespace com.example.cbsd_project {
+    namespace adapters {
+      class com.example.cbsd_project.adapters.MessagesAdapter {
+          {static} + mMessages : List<Message>
+          ~ context : Context
+          - RECEIVER_IMAGE : int
+          - RECEIVER_LOCATION : int
+          - RECEIVER_TEXT : int
+          - RECEIVER_WEB : int
+          - SENDER_IMAGE : int
+          - SENDER_LOCATION : int
+          - SENDER_TEXT : int
+          - SENDER_WEB : int
+          + MessagesAdapter()
+          + getItemCount()
+          + getItemViewType()
+          + onBindViewHolder()
+          + onCreateViewHolder()
+          - configureViewHolderImageReceiver()
+          - configureViewHolderImageSender()
+          - configureViewHolderTextReceiver()
+          - configureViewHolderWebReceiver()
+          - configureViewHolderWebSender()
+          - configureViewTextHolderSender()
+      }
+    }
+  }
+  
+
+  namespace com.example.cbsd_project {
+    namespace adapters {
+      class com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderImageReceiver {
+          + imageViewPhoto : ImageView
+          + imageViewUserAvatar : ImageView
+          + textViewSender : TextView
+          + ViewHolderImageReceiver()
+          + onCreateContextMenu()
+      }
+    }
+  }
+  
+
+  namespace com.example.cbsd_project {
+    namespace adapters {
+      class com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderImageSender {
+          + imageViewPhoto : ImageView
+          + imageViewUserAvatar : ImageView
+          + textViewSender : TextView
+          + ViewHolderImageSender()
+          + onCreateContextMenu()
+      }
+    }
+  }
+  
+
+  namespace com.example.cbsd_project {
+    namespace adapters {
+      class com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderTextReceiver {
+          + imageViewUserAvatar : ImageView
+          + textViewMessage : TextView
+          + textViewSender : TextView
+          + ViewHolderTextReceiver()
+          + onCreateContextMenu()
+      }
+    }
+  }
+  
+
+  namespace com.example.cbsd_project {
+    namespace adapters {
+      class com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderTextSender {
+          + imageViewUserAvatar : ImageView
+          + textViewMessage : TextView
+          + textViewSender : TextView
+          + ViewHolderTextSender()
+          + onCreateContextMenu()
+      }
+    }
+  }
+  
+
+  namespace com.example.cbsd_project {
+    namespace adapters {
+      class com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderWebReceiver {
+          + imageViewUserAvatar : ImageView
+          + textViewSender : TextView
+          + webViewMessage : WebView
+          + ViewHolderWebReceiver()
+          + onCreateContextMenu()
+      }
+    }
+  }
+  
+
+  namespace com.example.cbsd_project {
+    namespace adapters {
+      class com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderWebSender {
+          + imageViewUserAvatar : ImageView
+          + textViewSender : TextView
+          + webViewMessage : WebView
+          + ViewHolderWebSender()
+          + onCreateContextMenu()
+      }
+    }
+  }
+  
+
+  namespace com.example.cbsd_project {
+    namespace adapters {
+      class com.example.cbsd_project.adapters.RoomsAdapter {
+          - context : Context
+          - mRooms : List<Room>
+          + RoomsAdapter()
+          + getItemCount()
+          + onBindViewHolder()
+          + onCreateViewHolder()
+      }
+    }
+  }
+  
+
+  namespace com.example.cbsd_project {
+    namespace adapters {
+      class com.example.cbsd_project.adapters.RoomsAdapter.ViewHolder {
+          + buttonViewRoom : Button
+          + textViewIsPrivate : TextView
+          + textViewRoomName : TextView
+          + ViewHolder()
+      }
+    }
+  }
+  
+
+  com.example.cbsd_project.adapters.MessagesAdapter -up-|> androidx.recyclerview.widget.RecyclerView.Adapter
+  com.example.cbsd_project.adapters.MessagesAdapter +-down- com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderImageReceiver
+  com.example.cbsd_project.adapters.MessagesAdapter +-down- com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderImageSender
+  com.example.cbsd_project.adapters.MessagesAdapter +-down- com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderTextReceiver
+  com.example.cbsd_project.adapters.MessagesAdapter +-down- com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderTextSender
+  com.example.cbsd_project.adapters.MessagesAdapter +-down- com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderWebReceiver
+  com.example.cbsd_project.adapters.MessagesAdapter +-down- com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderWebSender
+  com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderImageReceiver .up.|> android.view.View.OnCreateContextMenuListener
+  com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderImageReceiver -up-|> androidx.recyclerview.widget.RecyclerView.ViewHolder
+  com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderImageSender .up.|> android.view.View.OnCreateContextMenuListener
+  com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderImageSender -up-|> androidx.recyclerview.widget.RecyclerView.ViewHolder
+  com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderTextReceiver .up.|> android.view.View.OnCreateContextMenuListener
+  com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderTextReceiver -up-|> androidx.recyclerview.widget.RecyclerView.ViewHolder
+  com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderTextSender .up.|> android.view.View.OnCreateContextMenuListener
+  com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderTextSender -up-|> androidx.recyclerview.widget.RecyclerView.ViewHolder
+  com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderWebReceiver .up.|> android.view.View.OnCreateContextMenuListener
+  com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderWebReceiver -up-|> androidx.recyclerview.widget.RecyclerView.ViewHolder
+  com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderWebSender .up.|> android.view.View.OnCreateContextMenuListener
+  com.example.cbsd_project.adapters.MessagesAdapter.ViewHolderWebSender -up-|> androidx.recyclerview.widget.RecyclerView.ViewHolder
+  com.example.cbsd_project.adapters.RoomsAdapter -up-|> androidx.recyclerview.widget.RecyclerView.Adapter
+  com.example.cbsd_project.adapters.RoomsAdapter +-down- com.example.cbsd_project.adapters.RoomsAdapter.ViewHolder
+  com.example.cbsd_project.adapters.RoomsAdapter.ViewHolder -up-|> androidx.recyclerview.widget.RecyclerView.ViewHolder
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

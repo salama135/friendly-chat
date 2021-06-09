@@ -1,0 +1,181 @@
+@startuml
+
+title __Friendly Chat Class Diagram__\n
+
+  namespace com.example.cbsd_project {
+    class com.example.cbsd_project.ChangeThemeActivity {
+        + onCreate()
+    }
+  }
+  
+
+  namespace com.example.cbsd_project {
+    class com.example.cbsd_project.CreateRoomActivity {
+        ~ TAG : String
+        ~ aSwitchIsPrivate : Switch
+        ~ editTextRoomName : EditText
+        - mDatabase : DatabaseReference
+        + checkFields()
+        + writeNewRoom()
+        # onCreate()
+    }
+  }
+  
+
+  namespace com.example.cbsd_project {
+    class com.example.cbsd_project.MainActivity {
+        + checkCurrentUser()
+        + onStart()
+        # onCreate()
+    }
+  }
+  
+
+  namespace com.example.cbsd_project {
+    class com.example.cbsd_project.SearchChatActivity {
+        ~ mDatabase : DatabaseReference
+        ~ messages : ArrayList<Message>
+        ~ messagesListView : RecyclerView
+        ~ messagesTemp : ArrayList<Message>
+        ~ search_btn : Button
+        ~ search_textbox : EditText
+        # onCreate()
+    }
+  }
+  
+
+  namespace com.example.cbsd_project {
+    class com.example.cbsd_project.ShowPinnedMessagesActivity {
+        ~ listViewMessages : RecyclerView
+        ~ messages : ArrayList<Message>
+        # onCreate()
+    }
+  }
+  
+
+  namespace com.example.cbsd_project {
+    class com.example.cbsd_project.SignInActivity {
+        ~ TAG : String
+        ~ editTextEmail : EditText
+        ~ editTextPassword : EditText
+        - mAuth : FirebaseAuth
+        + checkCurrentUser()
+        + checkFields()
+        + onStart()
+        # onCreate()
+        - signIn()
+    }
+  }
+  
+
+  namespace com.example.cbsd_project {
+    class com.example.cbsd_project.SignUpActivity {
+        ~ TAG : String
+        ~ editTextEmail : EditText
+        ~ editTextName : EditText
+        ~ editTextPassword : EditText
+        - mAuth : FirebaseAuth
+        - mDatabase : DatabaseReference
+        + checkFields()
+        + writeNewUser()
+        # onCreate()
+        - createAccount()
+    }
+  }
+  
+
+  namespace com.example.cbsd_project {
+    class com.example.cbsd_project.ViewRoomActivity {
+        {static} + PICK_PHOTO : int
+        ~ TAG : String
+        ~ editTextMessage : EditText
+        ~ imageURI : Uri
+        ~ listViewMessages : RecyclerView
+        ~ locationManager : LocationManager
+        ~ messages : ArrayList<Message>
+        {static} - COMMIT_CONTENT_FLAGS_KEY : String
+        {static} - INPUT_CONTENT_INFO_KEY : String
+        - mCurrentFlags : int
+        - mCurrentInputContentInfo : InputContentInfoCompat
+        - mDatabase : DatabaseReference
+        - storageReference : StorageReference
+        + onActivityResult()
+        + onContextItemSelected()
+        + onCreateContextMenu()
+        + onLocationChanged()
+        + onProviderDisabled()
+        + onProviderEnabled()
+        + onSaveInstanceState()
+        + onStatusChanged()
+        + writeNewMessage()
+        # onCreate()
+        # onRestart()
+        - checkFields()
+        - createEditTextWithContentMimeTypes()
+        - getLocation()
+        - onCommitContent()
+        - onCommitContentInternal()
+        - uploadImage()
+    }
+  }
+  
+
+  namespace com.example.cbsd_project {
+    class com.example.cbsd_project.ViewRoomsActivity {
+        ~ TAG : String
+        ~ listViewRooms : RecyclerView
+        ~ rooms : ArrayList<Room>
+        - mDatabase : DatabaseReference
+        # onCreate()
+        # onRestart()
+    }
+  }
+  
+
+  namespace com.example.cbsd_project {
+    class com.example.cbsd_project.ViewUserActivity {
+        {static} + PICK_PHOTO_FOR_AVATAR : int
+        ~ TAG : String
+        ~ editTextEmail : EditText
+        ~ editTextName : EditText
+        ~ imageURI : Uri
+        ~ imageViewUserPhoto : ImageView
+        - storageReference : StorageReference
+        + checkCurrentUser()
+        + getUserProfile()
+        + onActivityResult()
+        + signOut()
+        + updateProfile()
+        # onCreate()
+        - uploadImage()
+    }
+  }
+  
+
+  com.example.cbsd_project.ChangeThemeActivity -up-|> androidx.appcompat.app.AppCompatActivity
+  com.example.cbsd_project.CreateRoomActivity -up-|> androidx.appcompat.app.AppCompatActivity
+  com.example.cbsd_project.MainActivity -up-|> androidx.appcompat.app.AppCompatActivity
+  com.example.cbsd_project.SearchChatActivity -up-|> androidx.appcompat.app.AppCompatActivity
+  com.example.cbsd_project.SearchChatActivity o-- com.example.cbsd_project.adapters.MessagesAdapter : messageArrayAdapter
+  com.example.cbsd_project.ShowPinnedMessagesActivity -up-|> androidx.appcompat.app.AppCompatActivity
+  com.example.cbsd_project.ShowPinnedMessagesActivity o-- com.example.cbsd_project.adapters.MessagesAdapter : adapter
+  com.example.cbsd_project.ShowPinnedMessagesActivity o-- com.example.cbsd_project.helpers.MessagesDBHelper : messagesDBHelper
+  com.example.cbsd_project.SignInActivity -up-|> androidx.appcompat.app.AppCompatActivity
+  com.example.cbsd_project.SignUpActivity -up-|> androidx.appcompat.app.AppCompatActivity
+  com.example.cbsd_project.ViewRoomActivity .up.|> android.location.LocationListener
+  com.example.cbsd_project.ViewRoomActivity -up-|> androidx.appcompat.app.AppCompatActivity
+  com.example.cbsd_project.ViewRoomActivity o-- com.example.cbsd_project.adapters.MessagesAdapter : adapter
+  com.example.cbsd_project.ViewRoomActivity o-- com.example.cbsd_project.helpers.MessagesDBHelper : messagesDBHelper
+  com.example.cbsd_project.ViewRoomsActivity -up-|> androidx.appcompat.app.AppCompatActivity
+  com.example.cbsd_project.ViewRoomsActivity o-- com.example.cbsd_project.adapters.RoomsAdapter : adapter
+  com.example.cbsd_project.ViewUserActivity -up-|> androidx.appcompat.app.AppCompatActivity
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml
